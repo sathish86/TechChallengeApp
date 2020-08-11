@@ -51,7 +51,7 @@ stages:
       artifact: Executable
       displayName: 'Download pipeline artifact'
 
-    - task: CopyFile@2
+    - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Agent.BuildDirectory)/Executable'
         CleanTargetFolder: false
