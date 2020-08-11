@@ -70,4 +70,7 @@ stages:
       inputs:
         command: buildAndPush
         repository: sathish86/techchallengeapp
+        tags: |
+          latest
+          $(Build.BuildId)
     
