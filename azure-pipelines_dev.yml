@@ -7,6 +7,9 @@ trigger:
  - develop
  - feature/*
 
+variables:
+- group: servian-techchallenge-variables-dev
+
 # pool:
 #    vmImage: 'ubuntu-latest'
 
@@ -73,4 +76,20 @@ stages:
         tags: |
           latest
           $(Build.BuildId)
-    
+
+- stage: DeployToAzure
+  displayName: "Deploy App to Azure App Service"
+  pool:
+    vmImage: 'Ubuntu 18.04'
+  steps:
+  - task: AzureResourceGroupDeployment@2
+    inputs:
+      azureSubscription: 'HR-Dev-Sub'
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'servian-tech-challenge-dev'
+      location: 'westeurope'
+      templateLocation: 'Linked artifact'
+      csmFile: 'azuredeploy-dev.json'
+      overrideParameters: '-siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -demoAppImageVersion $(Build.BuildId)'
+      deploymentMode: 'Incremental'
+    displayName: 'Create or Update Azure Resource Group'
