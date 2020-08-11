@@ -93,6 +93,6 @@ stages:
         location: 'westeurope'
         templateLocation: 'Linked artifact'
         csmFile: 'azuredeploy-dev.json'
-        overrideParameters: '-siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -demoAppImageVersion $(Build.BuildId)'
+        overrideParameters: '-siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
         deploymentMode: 'Incremental'
       displayName: 'Create or Update Azure Resource Group'
