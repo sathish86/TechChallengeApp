@@ -65,7 +65,7 @@ stages:
         command: login
         containerRegistry: 'Docker Hub'
     
-    - task:
+    - task: Docker@2
       displayName: 'Build and Push Image'
       inputs:
         command: buildAndPush
