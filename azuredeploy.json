@@ -142,7 +142,7 @@
             ],
             "properties": {
                 "siteConfig": {
-                    "linuxFxVersion": "[concat('DOCKER|',variables('imageName'),':',parameters('techchallengeappImageVersion'))]",
+                    "linuxFxVersion": "[concat('DOCKER|',variables('imageName'),':',parameters('techchallengeappImageVersion'),' serve')]",
                     "connectionStrings": [
                         {
                             "name": "defaultConnection",
