@@ -1,0 +1,123 @@
+# Go
+# Build your Go project.
+# Add steps that test, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+
+# specific branch build
+trigger:
+  branches:
+    include:
+    - master
+    - releases/*
+    exclude:
+    - releases/old*
+
+variables:
+- group: servian-techchallenge-variables-prod
+
+# pool:
+#    vmImage: 'ubuntu-latest'
+
+stages:
+- stage: 'BuildTest'
+  displayName: 'Build and Test'
+  variables:
+    GOVERSION: '1.13.5'
+    CGO_ENABLES: '0'
+    GOOS: 'linux'
+    GOARCH: 'amd64'
+    APPNAME: 'TechChallengeApp'
+  jobs:
+  - job: BuildTestBackend
+    displayName: 'Build and Test Go'
+    pool:
+      vmImage: 'Ubuntu 18.04'
+    steps:
+    - task: GoTool@0
+      inputs:
+        version: $(GOVERSION)
+      displayName: 'Install and select GO version $(GOVERSION)'
+    
+    - task: Go@0
+      inputs:
+        command: 'build'
+        arguments: '-a -o $(APPNAME)'
+    
+    - publish: '$(Build.SourcesDirectory)/$(APPNAME)'
+      artifact: Executable
+      displayName: 'Publish pipeline artifact'
+
+- stage: PublishImage
+  displayName: 'Publish Docker Image'
+  jobs:
+  - job: PublishImage
+    displayName: 'Publish Docker Image'
+    pool:
+      vmImage: 'Ubuntu 18.04'
+    steps:
+    - download: current
+      artifact: Executable
+      displayName: 'Download pipeline artifact'
+
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Agent.BuildDirectory)/Executable'
+        CleanTargetFolder: false
+        Contents: '$(APPNAME)'
+        TargetFolder: '$(Build.SourcesDirectory)'
+      displayName: 'Copy executables to folder with Dockerfile'
+    
+    - task: Docker@2
+      displayName: 'Login to Docker Hub'
+      inputs:
+        command: login
+        containerRegistry: 'Docker Hub'
+    
+    - task: Docker@2
+      displayName: 'Build and Push Image'
+      inputs:
+        command: buildAndPush
+        repository: sathish86/techchallengeapp
+        tags: |
+          latest
+          $(Build.BuildId)
+
+- stage: DeployToAzure UAT
+  displayName: "Deploy App to Azure App Service UAT"
+  jobs:
+  - job: DeployToAzure UAT
+    displayName: 'Deploy App to Azure App Service UAT'
+    pool:
+      vmImage: 'Ubuntu 18.04'
+    steps:
+    - task: AzureResourceGroupDeployment@2
+      inputs:
+        azureSubscription: 'HR-Dev-Sub'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'servian-tech-challenge-uat'
+        location: 'westeurope'
+        templateLocation: 'Linked artifact'
+        csmFile: 'azuredeploy.json'
+        overrideParameters: '-environment_type uat -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
+        deploymentMode: 'Incremental'
+      displayName: 'Create or Update Azure Resource Group'
+
+- stage: DeployToAzure PROD
+  displayName: "Deploy App to Azure App Service PROD"
+  jobs:
+  - job: DeployToAzure PROD
+    displayName: 'Deploy App to Azure App Service PROD'
+    pool:
+      vmImage: 'Ubuntu 18.04'
+    steps:
+    - task: AzureResourceGroupDeployment@2
+      inputs:
+        azureSubscription: 'HR-Dev-Sub'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'servian-tech-challenge-prod'
+        location: 'westeurope'
+        templateLocation: 'Linked artifact'
+        csmFile: 'azuredeploy.json'
+        overrideParameters: '-environment_type prod -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
+        deploymentMode: 'Incremental'
+      displayName: 'Create or Update Azure Resource Group'
