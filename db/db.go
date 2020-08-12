@@ -29,6 +29,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/servian/TechChallengeApp/model"
+	"strings"
 )
 
 // Config - configuration for the db package
@@ -67,16 +68,17 @@ func RebuildDb(cfg Config) error {
 	if err != nil {
 		return err
 	}
-
+	// Adding split expression for azure postgres database, as we need to pass username with hostname
+	dbusername := strings.Split( cfg.DbUser, "@")[0]
+	// Removing TABLESPACE parameter because its not needed and throws permission error in azure postgres server.
 	query = fmt.Sprintf(`CREATE DATABASE %s
 WITH
 OWNER = %s
 ENCODING = 'UTF8'
 LC_COLLATE = 'en_US.utf8'
 LC_CTYPE = 'en_US.utf8'
-TABLESPACE = pg_default
 CONNECTION LIMIT = -1
-TEMPLATE template0;`, cfg.DbName, cfg.DbUser)
+TEMPLATE template0;`, cfg.DbName, dbusername)
 
 	fmt.Println(query)
 
