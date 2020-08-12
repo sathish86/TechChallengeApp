@@ -85,7 +85,7 @@ stages:
 - stage: DeployToAzureUAT
   displayName: "Deploy App to Azure App Service UAT"
   jobs:
-  - job: DeployToAzure UAT
+  - job: DeployToAzureUAT
     displayName: 'Deploy App to Azure App Service UAT'
     pool:
       vmImage: 'Ubuntu 18.04'
@@ -105,7 +105,7 @@ stages:
 - stage: DeployToAzurePROD
   displayName: "Deploy App to Azure App Service PROD"
   jobs:
-  - job: DeployToAzure PROD
+  - job: DeployToAzurePROD
     displayName: 'Deploy App to Azure App Service PROD'
     pool:
       vmImage: 'Ubuntu 18.04'
