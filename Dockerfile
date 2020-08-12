@@ -33,7 +33,6 @@ COPY conf.toml ./conf.toml
 COPY --from=build /tmp/swagger/dist ./assets/swagger
 COPY --from=build /swagger.json ./assets/swagger/swagger.json
 COPY --from=build /TechChallengeApp TechChallengeApp
-
 CMD [ "./TechChallengeApp", "updatedb"]
 CMD [ "./TechChallengeApp", "serve"]
 
