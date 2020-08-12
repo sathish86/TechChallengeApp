@@ -3,9 +3,11 @@
 # Add steps that test, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
 
-trigger: 
- - develop
- - feature/*
+trigger:
+  branches:
+    include:
+    - develop
+    - feature/*
 
 variables:
 - group: servian-techchallenge-variables-dev
