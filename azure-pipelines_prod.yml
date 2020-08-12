@@ -82,7 +82,7 @@ stages:
           latest
           $(Build.BuildId)
 
-- stage: DeployToAzure UAT
+- stage: DeployToAzureUAT
   displayName: "Deploy App to Azure App Service UAT"
   jobs:
   - job: DeployToAzure UAT
@@ -102,7 +102,7 @@ stages:
         deploymentMode: 'Incremental'
       displayName: 'Create or Update Azure Resource Group'
 
-- stage: DeployToAzure PROD
+- stage: DeployToAzurePROD
   displayName: "Deploy App to Azure App Service PROD"
   jobs:
   - job: DeployToAzure PROD
