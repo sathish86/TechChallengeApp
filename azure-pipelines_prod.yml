@@ -98,7 +98,7 @@ stages:
         location: 'eastus2'
         templateLocation: 'Linked artifact'
         csmFile: 'azuredeploy.json'
-        overrideParameters: '-environment_type uat -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
+        overrideParameters: '-servicePlanPricingTier B1 -environment_type uat -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
         deploymentMode: 'Incremental'
       displayName: 'Create or Update Azure Resource Group'
 
@@ -118,6 +118,6 @@ stages:
         location: 'australiasoutheast'
         templateLocation: 'Linked artifact'
         csmFile: 'azuredeploy.json'
-        overrideParameters: '-environment_type prod -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
+        overrideParameters: '-servicePlanPricingTier B1 -environment_type prod -siteName servian-techchallenge -administratorLogin $(DevDBUserName) -administratorLoginPassword $(DevDBPassword) -techchallengeappImageVersion $(Build.BuildId)'
         deploymentMode: 'Incremental'
       displayName: 'Create or Update Azure Resource Group'
