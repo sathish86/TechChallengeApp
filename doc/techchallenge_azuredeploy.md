@@ -7,7 +7,7 @@ Need to have below tools and cloud access to deploy the application
 
 ## High Level Architecture
 
-![alt text](https://github.com/sathish86/TechChallengeApp/tree/develop/doc/AzureDeployTechChallenge.png)
+![alt text](https://github.com/sathish86/TechChallengeApp/tree/develop/doc/images/AzureDeployTechChallenge.png)
 
 ## Steps to provision and deploy the solution
 
