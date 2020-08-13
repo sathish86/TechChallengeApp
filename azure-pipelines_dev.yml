@@ -8,6 +8,9 @@ trigger:
     include:
     - develop
     - feature/*
+  paths:
+    exclude:
+    - doc/*
 
 variables:
 - group: servian-techchallenge-variables-dev
