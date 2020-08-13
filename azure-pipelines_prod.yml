@@ -11,6 +11,10 @@ trigger:
     - releases/*
     exclude:
     - releases/old*
+  paths:
+    exclude:
+    - doc/*
+
 
 variables:
 - group: servian-techchallenge-variables-prod
